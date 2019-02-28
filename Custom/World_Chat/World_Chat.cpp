@@ -46,7 +46,7 @@ std::string world_chat_ClassColor[11] =
     "|cffFF7D0A", // DRUID
 };
 
-/* Ranks */
+/* Ranks - Not used at the moment */
 std::string world_chat_GM_RANKS[4] =
 {
     "Player",
@@ -90,9 +90,9 @@ public:
     static bool HandleWorldChatCommand(ChatHandler * pChat, const char * msg)
     {
 
-        if (!config_ChatEnabled) {
-            Player* player = pChat->GetSession()->GetPlayer();
-            ChatHandler(pChat->GetSession()).PSendSysMessage("[WC] %sWorld Chat System is disabled.", WORLD_CHAT_RED);
+        if (!config_ChatEnabled) { // If chat system is disabled
+            Player* player = pChat->GetSession()->GetPlayer(); // get player
+            ChatHandler(pChat->GetSession()).PSendSysMessage("[WC] %sWorld Chat System is disabled.", WORLD_CHAT_RED); // Anounce him that World Chat System is disabled
             return true;
         }
 
@@ -102,7 +102,8 @@ public:
         Player* player = pChat->GetSession()->GetPlayer();
         uint32 guid = player->GetGUID();
 
-        if (!WorldChat[guid].chat) {
+        if (!WorldChat[guid].chat)// If player choosed to disable World Char he can't talk on it
+        { 
             ChatHandler(player->GetSession()).PSendSysMessage("[WC] %sWorld Chat is disabled. (.chat)", WORLD_CHAT_RED);
             return true;
         }
@@ -110,7 +111,7 @@ public:
         char message[1024];
 
 
-        SessionMap sessions = sWorld->GetAllSessions();
+        SessionMap sessions = sWorld->GetAllSessions(); // Get all players online
 
         for (SessionMap::iterator itr = sessions.begin(); itr != sessions.end(); ++itr)
         {
@@ -121,34 +122,39 @@ public:
             Player* target = itr->second->GetPlayer();
             uint32 guid2 = target->GetGUID();
 
-            if (WorldChat[guid2].chat == 1)
+            if (WorldChat[guid2].chat == 1) // Checks if player have the World Chat visible
             {
-                if (config_ChatCrossFactions) {
-                    if (player->IsGameMaster()) {
+                if (config_ChatCrossFactions) // Checks if the chat is Cross Factions
+                {
+                    if (player->IsGameMaster()) // Game Master have the blizz icon in place of faction
+                    {
                         snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
                     }
                     else
                         snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_TeamIcon[player->GetTeamId()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
-                    ChatHandler(target->GetSession()).PSendSysMessage(message);
+                    ChatHandler(target->GetSession()).PSendSysMessage(message); // Prints player the message
                 }
-                else
+                else // If is not Cross Factions
                 {
-                    if (player->GetTeamId() == target->GetTeamId())
+                    if (player->GetTeamId() == target->GetTeamId()) // Checks if the receiver is the same faction as the sender
                     {
-                        if (player->IsGameMaster()) {
+                        if (player->IsGameMaster())// Game Master have the blizz icon in place of faction
+                        {
                             snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
                         }
                         else
                             snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_TeamIcon[player->GetTeamId()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
-                        ChatHandler(target->GetSession()).PSendSysMessage(message);
+                        ChatHandler(target->GetSession()).PSendSysMessage(message); // Prints player the message
                     }
-                    else if (target->IsGameMaster()) {
-                        if (player->IsGameMaster()) {
+                    else if (target->IsGameMaster()) // If it is not Cross Factions but the receiver is a Game Master send him the message
+                    {
+                        if (player->IsGameMaster()) // If the sender is a game master put the blizz icon
+                        {
                             snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
                         }
                         else
                             snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_TeamIcon[player->GetTeamId()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
-                        ChatHandler(target->GetSession()).PSendSysMessage(message);
+                        ChatHandler(target->GetSession()).PSendSysMessage(message); // Prints player the message
                     }
                 }
             }
@@ -157,12 +163,13 @@ public:
         return true;
     }
 
-    static bool HandleWorldChatHordeCommand(ChatHandler * pChat, const char * msg)
+    static bool HandleWorldChatHordeCommand(ChatHandler * pChat, const char * msg) // Send World Message as a GM only to Horde. Ussable for Cross Factions World Chat disabled
     {
 
-        if (!config_ChatEnabled) {
+        if (!config_ChatEnabled) // World Chat System is disabled
+        {
             Player* player = pChat->GetSession()->GetPlayer();
-            ChatHandler(pChat->GetSession()).PSendSysMessage("[WC] %sWorld Chat System is disabled.|r", WORLD_CHAT_RED);
+            ChatHandler(pChat->GetSession()).PSendSysMessage("[WC] %sWorld Chat System is disabled.|r", WORLD_CHAT_RED); // Prints player the message
             return true;
         }
 
@@ -172,8 +179,9 @@ public:
         Player* player = pChat->GetSession()->GetPlayer();
         uint32 guid = player->GetGUID();
 
-        if (!WorldChat[guid].chat) {
-            ChatHandler(player->GetSession()).PSendSysMessage("[WC] %sWorld Chat is disabled. (.chat)|r", WORLD_CHAT_RED);
+        if (!WorldChat[guid].chat) // If the World Chat is disabled send error
+        {
+            ChatHandler(player->GetSession()).PSendSysMessage("[WC] %sWorld Chat is hidden. (.chat on to show)|r", WORLD_CHAT_RED); // Prints player the message
             return true;
         }
 
@@ -191,7 +199,7 @@ public:
             Player* target = itr->second->GetPlayer();
             uint32 guid2 = target->GetGUID();
 
-            if (WorldChat[guid2].chat == 1 && target->GetTeamId() == TEAM_HORDE || WorldChat[guid2].chat == 1 && target->IsGameMaster())
+            if (WorldChat[guid2].chat == 1 && target->GetTeamId() == TEAM_HORDE || WorldChat[guid2].chat == 1 && target->IsGameMaster()) // If the player is Horde or if the player is Alliance but is a Game Master send him the message
             {
                 snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
                 ChatHandler(target->GetSession()).PSendSysMessage(message);
@@ -201,7 +209,7 @@ public:
         return true;
     }
 
-    static bool HandleWorldChatAllianceCommand(ChatHandler * pChat, const char * msg)
+    static bool HandleWorldChatAllianceCommand(ChatHandler * pChat, const char * msg) // Same as Horde
     {
 
         if (!config_ChatEnabled) {
@@ -217,7 +225,7 @@ public:
         uint32 guid = player->GetGUID();
 
         if (!WorldChat[guid].chat) {
-            ChatHandler(player->GetSession()).PSendSysMessage("[WC] %sWorld Chat is disabled. (.chat)|r", WORLD_CHAT_RED);
+            ChatHandler(player->GetSession()).PSendSysMessage("[WC] %sWorld Chat is hidden. (.chat on to show)|r", WORLD_CHAT_RED);
             return true;
         }
 
@@ -245,12 +253,14 @@ public:
         return true;
     }
 
+// Activates World Chat for player
     static bool HandleWorldChatOnCommand(ChatHandler* handler, const char* msg)
     {
         Player* player = handler->GetSession()->GetPlayer();
         uint32 guid = player->GetGUID();
 
-        if (!config_ChatEnabled) {
+        if (!config_ChatEnabled)
+        {
             ChatHandler(player->GetSession()).PSendSysMessage("[WC] %sWorld Chat System is disabled.|r", WORLD_CHAT_RED);
             return true;
         }
@@ -270,7 +280,8 @@ public:
 
         return true;
     };
-
+    
+// Disables World Chat for player
     static bool HandleWorldChatOffCommand(ChatHandler* handler, const char* msg)
     {
         Player* player = handler->GetSession()->GetPlayer();
@@ -295,7 +306,7 @@ public:
 
         return true;
     };
-
+    // SETS UP COMMANDS -- !IMPORTANT! Don't edit unless you know what you are doing!
     std::vector<ChatCommand> GetCommands() const
     {
         static std::vector<ChatCommand> wcCommandTable =
@@ -314,6 +325,7 @@ public:
     }
 };
 
+// LOADS CONFIG -- !IMPORTANT! Don't edit unless you know what you are doing!
 class World_Chat_Config : public WorldScript
 {
 public: World_Chat_Config() : WorldScript("World_Chat_Config") { };
@@ -332,6 +344,7 @@ public: World_Chat_Config() : WorldScript("World_Chat_Config") { };
         }
 };
 
+// SETS UP CLASSES FOR CUSTOM SCRIPTS -- !IMPORTANT! Don't edit unless you know what you are doing!
 void AddSC_World_Chat()
 {
     new World_Chat_Config;
