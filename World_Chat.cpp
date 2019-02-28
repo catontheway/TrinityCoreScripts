@@ -33,7 +33,7 @@ std::string WORLD_CHAT_GREY = "|cff808080";
 /* Class Colors */
 std::string world_chat_ClassColor[11] =
 {
-    "|cffC79C6E", // WARRIOR
+    "|cffC79C6E", // WARRIOR 
     "|cffF58CBA", // PALADIN
     "|cffABD473", // HUNTER
     "|cffFFF569", // ROGUE
