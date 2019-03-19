@@ -33,7 +33,7 @@ std::string WORLD_CHAT_GREY = "|cff808080";
 /* Class Colors */
 std::string world_chat_ClassColor[11] =
 {
-    "|cffC79C6E", // WARRIOR 
+    "|cffC79C6E", // WARRIOR
     "|cffF58CBA", // PALADIN
     "|cffABD473", // HUNTER
     "|cffFFF569", // ROGUE
@@ -103,7 +103,7 @@ public:
         uint32 guid = player->GetGUID();
 
         if (!WorldChat[guid].chat)// If player choosed to disable World Char he can't talk on it
-        { 
+        {
             ChatHandler(player->GetSession()).PSendSysMessage("[WC] %sWorld Chat is disabled. (.chat)", WORLD_CHAT_RED);
             return true;
         }
@@ -199,7 +199,7 @@ public:
             Player* target = itr->second->GetPlayer();
             uint32 guid2 = target->GetGUID();
 
-            if (WorldChat[guid2].chat == 1 && target->GetTeamId() == TEAM_HORDE || WorldChat[guid2].chat == 1 && target->IsGameMaster()) // If the player is Horde or if the player is Alliance but is a Game Master send him the message
+            if ((WorldChat[guid2].chat == 1 && target->GetTeamId() == TEAM_HORDE) || (WorldChat[guid2].chat == 1 && target->IsGameMaster())) // If the player is Horde or if the player is Alliance but is a Game Master send him the message
             {
                 snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
                 ChatHandler(target->GetSession()).PSendSysMessage(message);
@@ -243,7 +243,7 @@ public:
             Player* target = itr->second->GetPlayer();
             uint32 guid2 = target->GetGUID();
 
-            if (WorldChat[guid2].chat == 1 && target->GetTeamId() == TEAM_ALLIANCE || WorldChat[guid2].chat == 1 && target->IsGameMaster())
+            if ((WorldChat[guid2].chat == 1 && target->GetTeamId() == TEAM_ALLIANCE) || (WorldChat[guid2].chat == 1 && target->IsGameMaster()))
             {
                 snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
                 ChatHandler(target->GetSession()).PSendSysMessage(message);
@@ -280,7 +280,7 @@ public:
 
         return true;
     };
-    
+
 // Disables World Chat for player
     static bool HandleWorldChatOffCommand(ChatHandler* handler, const char* msg)
     {
