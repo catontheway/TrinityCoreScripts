@@ -54,8 +54,8 @@ DELETE FROM `rbac_linked_permissions` WHERE `id`=194 AND `linkedId`=1010;
 DELETE FROM `rbac_permissions` WHERE `id`=1009;
 DELETE FROM `rbac_permissions` WHERE `id`=1010;
 DELETE FROM `rbac_permissions` WHERE `id`=1011;
-INSERT INTO `rbac_linked_permissions` (`id`, `linkedId`) VALUES (194, 1011), (194, 1010), (195, 1009);
 INSERT INTO `rbac_permissions` (`id`, `name`) VALUES (1009, 'Command: chat'), (1010, 'Command: chath'), (1011, 'Command: chata');
+INSERT INTO `rbac_linked_permissions` (`id`, `linkedId`) VALUES (194, 1011), (194, 1010), (195, 1009);
 ```
 ## Server Config Setup
 At the end of your worldserver.conf at this code:
