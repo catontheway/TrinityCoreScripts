@@ -39,14 +39,14 @@ AddSC_World_Chat();  // world_chat.cpp
 5. Compile and follow the next step.
 
 ## Database Setup
-### Setting up commands
+### Setting up commands in world database
 ```sql
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('chata', 1011, 'Syntax: .chata $text - To speak as a GM only to Alliance');
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('chath', 1010, 'Syntax: .chath $text - To speak as a GM only to Horde');
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('chat', 1009, 'Syntax: .chat $text\r\n.chat on To show World Chat\r\n.chat off To hide World Chat');
 ```
 
-### Setting up command permissions
+### Setting up command permissions in auth database
 ```sql
 DELETE FROM `rbac_linked_permissions` WHERE `id`=194 AND `linkedId`=1011;
 DELETE FROM `rbac_linked_permissions` WHERE `id`=195 AND `linkedId`=1009;
